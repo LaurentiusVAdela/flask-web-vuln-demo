@@ -13,12 +13,11 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        # Intentionally vulnerable SQL query
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
-        query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
-        print(f"Executing query: {query}")  # for debugging
-        cursor.execute(query)
+
+        # ✅ Secure query using parameterized values
+        cursor.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
         user = cursor.fetchone()
         conn.close()
 
@@ -28,3 +27,4 @@ def login():
             return "<h2>Login failed. Invalid credentials.</h2>"
     
     return render_template('login.html')
+
