@@ -1,7 +1,17 @@
 from flask import Flask, request, render_template
 import sqlite3
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
+import os
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)  # Secure random key
+
+class ProfileForm(FlaskForm):
+    name = StringField('New Display Name', validators=[DataRequired()])
+    submit = SubmitField('Update')
+
 
 # Global comment list (for demonstration only)
 comments = []
@@ -46,10 +56,12 @@ def comment_section():
 
 @app.route('/profile', methods=['GET', 'POST'])
 def update_profile():
+    form = ProfileForm()
     name = None
-    if request.method == 'POST':
-        name = request.form['name']  # 💀 No CSRF protection here
-    return render_template('profile.html', name=name)
+    if form.validate_on_submit():
+        name = form.name.data
+    return render_template('profile.html', form=form, name=name)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

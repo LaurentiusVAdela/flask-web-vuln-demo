@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Update Profile</title>
+    <title>Update Profile (CSRF Protected)</title>
 </head>
 <body>
     <h1>Update Profile</h1>
     <form method="POST">
-        New Display Name: <input name="name"><br>
-        <input type="submit" value="Update">
+        {{ form.hidden_tag() }}
+        {{ form.name.label }} {{ form.name(size=30) }}<br><br>
+        {{ form.submit() }}
     </form>
 
     {% if name %}
