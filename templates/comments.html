@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comments</title>
+</head>
+<body>
+    <h1>Leave a Comment</h1>
+    <form method="POST">
+        <textarea name="comment" rows="4" cols="40"></textarea><br>
+        <input type="submit" value="Post Comment">
+    </form>
+
+    <h2>All Comments:</h2>
+    {% for c in comments %}
+        <p>{{ c|safe }}</p>
+    {% endfor %}
+
+    <br>
+    <a href="/">← Back to Home</a>
+</body>
+</html>

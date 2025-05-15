@@ -3,9 +3,18 @@ import sqlite3
 
 app = Flask(__name__)
 
+# Global comment list (for demonstration only)
+comments = []
+
 @app.route('/')
 def home():
-    return "Welcome! Go to /login to test SQL injection."
+    return '''
+    <h1>Welcome to the Vulnerable Flask App</h1>
+    <ul>
+        <li><a href="/login">Login Page (SQL Injection)</a></li>
+        <li><a href="/comments">Comments Page (XSS)</a></li>
+    </ul>
+    '''
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -13,10 +22,9 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
+        # ✅ Secure query using parameterized values (Fixed SQLi)
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
-
-        # ✅ Secure query using parameterized values
         cursor.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
         user = cursor.fetchone()
         conn.close()
@@ -28,3 +36,12 @@ def login():
     
     return render_template('login.html')
 
+@app.route('/comments', methods=['GET', 'POST'])
+def comment_section():
+    if request.method == 'POST':
+        comment = request.form['comment']
+        comments.append(comment)  # 💀 Vulnerable to XSS
+    return render_template('comments.html', comments=comments)
+
+if __name__ == '__main__':
+    app.run(debug=True)
