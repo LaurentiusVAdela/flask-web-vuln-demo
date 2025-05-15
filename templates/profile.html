@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Profile</title>
+</head>
+<body>
+    <h1>Update Profile</h1>
+    <form method="POST">
+        New Display Name: <input name="name"><br>
+        <input type="submit" value="Update">
+    </form>
+
+    {% if name %}
+        <h2>Updated Name: {{ name }}</h2>
+    {% endif %}
+
+    <br><a href="/">← Back to Home</a>
+</body>
+</html>

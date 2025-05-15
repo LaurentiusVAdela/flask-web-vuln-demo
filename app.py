@@ -13,6 +13,7 @@ def home():
     <ul>
         <li><a href="/login">Login Page (SQL Injection)</a></li>
         <li><a href="/comments">Comments Page (XSS)</a></li>
+        <li><a href="/profile">Profile Page (CSRF)</a></li>
     </ul>
     '''
 
@@ -42,6 +43,13 @@ def comment_section():
         comment = request.form['comment']
         comments.append(comment)  # 💀 Vulnerable to XSS
     return render_template('comments.html', comments=comments)
+
+@app.route('/profile', methods=['GET', 'POST'])
+def update_profile():
+    name = None
+    if request.method == 'POST':
+        name = request.form['name']  # 💀 No CSRF protection here
+    return render_template('profile.html', name=name)
 
 if __name__ == '__main__':
     app.run(debug=True)
